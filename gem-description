@@ -21,9 +21,11 @@ cmd.options[:args]   = [ gem_name ]
 
 # Open a string buffer for the command to populate with the spec.
 spec_yaml = ''
-out_str_io = StringIO.open(spec_yaml, 'w')
-cmd.use_ui(Gem::StreamUI.new(STDIN, out_str_io, STDERR)) { cmd.execute }
-out_str_io.close
+StringIO.open(spec_yaml, 'w') do |out_str_io|
+  cmd.use_ui(Gem::StreamUI.new(STDIN, out_str_io, STDERR)) do
+    cmd.execute
+  end
+end
 
 abort "Aborting: gem specification empty" if spec_yaml.empty?
 spec = YAML::load spec_yaml
