@@ -11,6 +11,7 @@ require 'rubygems/user_interaction' # For Gem::StreamUI
 require 'stringio'
 
 gem_name = ARGV[0]
+# Note: argument verification is handled implicitly by Gem::Command.
 
 #
 # Make a remote call for the gem specification.
