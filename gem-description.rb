@@ -6,25 +6,32 @@
 
 require 'yaml'
 require 'rubygems' # To have Gem::Specification for deserialization
+require 'rubygems/commands/specification_command'
+require 'rubygems/user_interaction' # For Gem::StreamUI
+require 'stringio'
 
-raise 'Requires gem argument' unless ARGV.size == 1
 gem_name = ARGV[0]
 
 #
 # Make a remote call for the gem specification.
 #
-spec_yaml = `gem specification #{gem_name} --remote`
-if spec_yaml.empty?
-  STDERR.puts "Unable to gather gem specification"
-  exit
-end
+cmd = Gem::Commands::SpecificationCommand.new
+cmd.options[:domain] = :remote
+cmd.options[:args]   = [ gem_name ]
 
+# Open a string buffer for the command to populate with the spec.
+spec_yaml = ''
+out_str_io = StringIO.open(spec_yaml, 'w')
+cmd.use_ui(Gem::StreamUI.new(STDIN, out_str_io, STDERR)) { cmd.execute }
+out_str_io.close
+
+abort "Aborting: gem specification empty" if spec_yaml.empty?
 spec = YAML::load spec_yaml
 
 #
 # This should deserialize to a Gem::Specification but if
-# it lacks the '--- !ruby/object:Gem::Specification' line,
-# it could deserialize to a Hash.
+# the YAML spec string lacks the '--- !ruby/object:Gem::Specification' line,
+# it might deserialize to a Hash (maybe???).
 #
 if spec.respond_to? :description
   puts spec.description
