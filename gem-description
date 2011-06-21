@@ -12,6 +12,11 @@ require 'rubygems/commands/specification_command'
 require 'rubygems/user_interaction' # For Gem::StreamUI
 require 'stringio'
 
+if ARGV.empty? or ARGV.any? { |arg| arg =~ /^--help|-h|-\?$/ }
+  puts "Usage: #{File.basename($0)} name-of-remote-gem"
+  exit
+end
+
 gem_name = ARGV[0]
 # Note: argument verification is handled implicitly by Gem::Command.
 
