@@ -38,16 +38,11 @@ end
 abort "Aborting: gem specification empty" if spec_yaml.empty?
 spec = YAML::load spec_yaml
 
-#
-# This should deserialize to a Gem::Specification but if
-# the YAML spec string lacks the '--- !ruby/object:Gem::Specification' line,
-# it might deserialize to a Hash (maybe???).
-#
+# This should deserialize to a Gem::Specification.
 if spec.respond_to? :description
   puts spec.description
-elsif spec.respond_to? :[]
-  puts spec['description']
 else
   puts "Hmm, not sure what to do with this..."
   p spec
+  abort
 end
