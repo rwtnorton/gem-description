@@ -4,6 +4,8 @@
 # Displays the description of a remote gem on stdout.
 #
 
+require 'psych' # Require before yaml to avoid bug in how
+                # RubyGems 1.5.1 and Ruby 1.9.2 interact.
 require 'yaml'
 require 'rubygems' # To have Gem::Specification for deserialization
 require 'rubygems/commands/specification_command'
