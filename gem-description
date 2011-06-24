@@ -12,7 +12,7 @@ require 'rubygems/commands/specification_command'
 require 'rubygems/user_interaction' # For Gem::StreamUI
 require 'stringio'
 
-if ARGV.empty? or ARGV.any? { |arg| arg =~ /^--help|-h|-\?$/ }
+if ARGV.empty? or ARGV.any? { |arg| arg =~ /^(?:--help|-h|-\?)$/ }
   puts "Usage: #{File.basename($0)} name-of-remote-gem"
   exit
 end
